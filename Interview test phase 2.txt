@@ -1,0 +1,24 @@
+
+***********The App************
+The app is a list of users, you can view multiple pages of users and favourite users that you want to favourite.
+
+
+
+Plase 2 - Some changes and additions: 
+
+* The header rectangle at the top needs to be a different colour - #60edf8  - to be precise.
+
+
+
+
+* The Favourite buttons weren't working after you switch pages. Please fix this if you haven't already. Why was this the case? How would you commit this data to the server?
+
+
+
+
+* Operators are clicking the favourite button for the wrong user - implement something which will reduce the chance of this happening
+
+
+
+
+* The Operators need to be able to assign a user to one of three teams ("Alpha", "Beta", "Gamma"). Do this in a way that will also facilitate other team management additions in the future - make sure that this change is being sent to the server and that it is being commited to a service - the user service is not a suitable place for any team accessing or manipulation to happen. If you are struggling for time then a brief runover how you would do this will suffice.

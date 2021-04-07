@@ -1,0 +1,195 @@
+﻿@model IEnumerable<DevTest.Core.Classes.User>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>User Edit System</h1>
+    <h2 class="small">View, add and edit the users here.</h2>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="small">Users</h1>
+
+        <!--QUESTION: Why do we use the using keyword, both in this case, and potentially in other cases -->
+        <!--ANSWER: In C Sharp, there are three primary reasons for the 'using' keyword:
+                * For statements to dispose of IDisposable objects at the end of the scope.
+                * For directives to create an alias for a namespace or to import types defined in other namespaces.
+                * For static directives to import members of a single class.
+            -->
+        @using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "GET", Url = Url.Action("GetPage"), UpdateTargetId = "updatethis" }))
+        {
+            <div id="updatethis">
+                @Html.Partial("GetPage", Model)
+            </div>
+            <br />
+            <div class="pull-left"><button class="btn btn-default" type="submit" name="page" value="0">Page 1</button></div>
+            <div class="pull-right"><button class="btn btn-default" type="submit" name="page" value="1">Page 2</button></div>
+        }
+
+    </div>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('.isfavourite').on('click', function () {
+                $(this).toggleClass('on');
+
+                //nothing here to commit this change to the server/database.. ignore this... for now
+            });
+
+        });
+
+        function AppendRow(row, userId, username, title, firstname, lastname, email) {
+            //Bind User ID
+            $(".UserId", row).find("span").html(userId);
+
+            //Bind User Name.
+            $(".UserName", row).find("span").html(username);
+            $(".UserName", row).find("input").val(username);
+
+            //Bind Title.
+            $(".Title", row).find("span").html(title);
+            $(".Title", row).find("input").val(title);
+
+            //Bind First Name.
+            $(".FirstName", row).find("span").html(firstname);
+            $(".FirstName", row).find("input").val(firstname);
+
+            //Bind Last Name.
+            $(".LastName", row).find("span").html(lastname);
+            $(".LastName", row).find("input").val(lastname);
+
+            //Bind Email
+            $(".Email", row).find("span").html(email);
+            $(".Email", row).find("input").val(email);
+
+            //Dislay 'Edit' and add Table Row
+            row.find(".Edit").show();
+            $("#tblUsers").append(row);
+        };
+
+        //Add event handler.
+        $("body").on("click", "#btnAdd", function () {
+
+            //Get Field Values from 'Add User' Table
+            var txtUserName = $("#txtUserName");
+            var txtPassword = $("#txtPassword");
+            var txtTitle = $("#txtTitle");
+            var txtFirstName = $("#txtFirstName");
+            var txtLastName = $("#txtLastName");
+            var txtEmail = $("#txtEmail");
+
+            //Alert User if any fields are empty
+            if (txtUserName.val() == 0 || txtPassword.val() == 0 || txtTitle.val() == 0
+                || txtFirstName.val() == 0 || txtLastName.val() == 0 || txtEmail.val() == 0) {
+                alert("One or More Fields are empty!")
+                return;
+            }
+
+            //Ajax Post to Add User to List
+            $.ajax({
+                type: "POST",
+                url: "/Home/InsertUser",
+                data: '{UserName: "' + txtUserName.val() + '", Password: "' + txtPassword.val() + '", Title: "' + txtTitle.val()
+                    + '", FirstName: "' + txtFirstName.val() + '", LastName: "' + txtLastName.val() + '", Email: "' + txtEmail.val() + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    //Add new Table Row with new User Data
+                    var row = $("#tblUsers tr:last-child");
+                    if ($("#tblUsers tr:last-child span").eq(0).html() != "&nbsp;") {
+                        row = row.clone();
+                    }
+                    AppendRow(row, r.UserId, r.Title, r.FirstName, r.LastName, r.UserName, r.Email);
+
+                    alert("New User '" + r.UserName + "' has successfully been added");
+
+                    //Clear Form Fields
+                    txtUserName.val("");
+                    txtPassword.val("");
+                    txtTitle.val("");
+                    txtFirstName.val("");
+                    txtLastName.val("");
+                    txtEmail.val("");
+                }
+            });
+        });
+
+        //Edit event handler.
+        $("body").on("click", "#tblUsers .Edit", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    $(this).find("input").show();
+                    $(this).find("span").hide();
+                }
+            });
+            row.find(".Update").show();
+            row.find(".Cancel").show();
+            row.find(".Delete").hide();
+            $(this).hide();
+        });
+
+        //Update event handler.
+        $("body").on("click", "#tblUsers .Update", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    span.html(input.val());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Cancel").hide();
+            $(this).hide();
+
+            //Get Updated Field Values
+            var UserId = row.find(".UserId").find("span").html();
+            var UserName = row.find(".UserName").find("span").html();
+            var UserTitle = row.find(".Title").find("span").html();
+            var UserFirstName = row.find(".FirstName").find("span").html();
+            var UserLastName = row.find(".LastName").find("span").html();
+            var UserEmail = row.find(".Email").find("span").html();
+
+            //Ajax Post to Update User
+            $.ajax({
+                type: "POST",
+                url: "/Home/UpdateUser",
+                data: '{UserId:' + JSON.stringify(UserId) + ', UserName:' + JSON.stringify(UserName) +
+                    ', Title:' + JSON.stringify(UserTitle) + ', FirstName:' + JSON.stringify(UserFirstName) +
+                    ', LastName:' + JSON.stringify(UserLastName) + ', Email:' + JSON.stringify(UserEmail) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            });
+        });
+
+        //Cancel event handler.
+        $("body").on("click", "#tblUsers .Cancel", function () {
+            var row = $(this).closest("tr");
+            $("td", row).each(function () {
+                if ($(this).find("input").length > 0) {
+                    var span = $(this).find("span");
+                    var input = $(this).find("input");
+                    input.val(span.html());
+                    span.show();
+                    input.hide();
+                }
+            });
+            row.find(".Edit").show();
+            row.find(".Update").hide();
+            $(this).hide();
+        });
+
+    </script>
+}

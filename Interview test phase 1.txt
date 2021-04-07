@@ -1,0 +1,19 @@
+
+***********The App************
+The app is a list of users, you can view multiple pages of users and favourite users that you want to favourite.
+
+
+
+Phase 1 - Get it working:
+
+* Fix the errors to get the application to work correctly - DONE
+
+
+
+* We have had reports that there are some bugs present which stop the appication functioning as it should. Please fix these. -
+
+
+
+* There might also be some poor practice included which is neither an error or a bug. Fix these if you think you have time, 
+	if not please comment the code with a proposed solution.
+

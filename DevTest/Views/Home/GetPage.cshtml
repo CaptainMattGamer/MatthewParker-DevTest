@@ -1,0 +1,86 @@
+﻿@model IEnumerable<DevTest.Core.Classes.User>
+
+<table id="tblUsers" class="table" style="width: 100%;">
+    <thead>
+        <tr>
+            <th style="display:none">User ID</th>
+            <th>User Name</th>
+            <th>Title</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+        <tr>
+            <td class="UserId" style="display:none">
+                <span>@user.UserId</span>
+            </td>
+            <td class="UserName">
+                <span>@user.UserName</span>
+                <input type="text" value="@user.UserName" style="display:none" />
+            </td>
+            <td class="Title">
+                <span>@user.Title</span>
+                <input type="text" value="@user.Title" style="display:none" />
+            </td>
+            <td class="FirstName">
+                <span>@user.FirstName</span>
+                <input type="text" value="@user.FirstName" style="display:none" />
+            </td>
+            <td class="LastName">
+                <span>@user.LastName</span>
+                <input type="text" value="@user.LastName" style="display:none" />
+            </td>
+            <td class="Email">
+                <span>@user.Email</span>
+                <input type="text" value="@user.Email" style="display:none" />
+            </td>
+            <td>
+                <a class="Edit" href="javascript:;">Edit</a>
+                <a class="Update" href="javascript:;" style="display:none">Update</a>
+                <a class="Cancel" href="javascript:;" style="display:none">Cancel</a>
+            </td>
+            <td>
+                <span class="isfavourite glyphicon" aria-hidden="true"></span>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td style="width: 150px">
+            Title<br />
+            <input type="text" id="txtTitle" style="width:140px" />
+        </td>
+        <td style="width: 150px">
+            First Name<br />
+            <input type="text" id="txtFirstName" style="width:140px" />
+        </td>
+        <td style="width: 150px">
+            Last Name<br />
+            <input type="text" id="txtLastName" style="width:140px" />
+        </td>
+        <td style="width: 150px">
+            Email Address<br />
+            <input type="text" id="txtEmail" style="width:140px" />
+        </td>
+        <td style="width: 150px">
+            UserName<br />
+            <input type="text" id="txtUserName" style="width:140px" />
+        </td>
+        <td style="width: 150px">
+            Password<br />
+            <input type="text" id="txtPassword" style="width:140px" />
+        </td>
+        <td style="width: 200px">
+            <br />
+            <input type="button" id="btnAdd" value="Add" />
+        </td>
+    </tr>
+</table>
